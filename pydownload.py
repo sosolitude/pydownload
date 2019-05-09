@@ -5,13 +5,12 @@ import re
 import os
 import threadpool
 import threading
+import argparse
 from bs4 import BeautifulSoup 
 
 MAX_THREADS=10
 
-url="https://mirrors.tuna.tsinghua.edu.cn/centos/7.6.1810/atomic/x86_64/"
-#url="https://mirrors.tuna.tsinghua.edu.cn/centos/7.6.1810/atomic/x86_64/Packages/"
-dir="packages/"
+default_dir="packages/"
 
 def fetch_web(url,savedir,r=True):
     dir_check(savedir)
@@ -56,14 +55,26 @@ def get_file(url,savedir):
 
 def dir_check(savedir):
     if os.path.exists(savedir):
-        return
+        return 
     else:
         os.mkdir(savedir)
     
 def url_check():
     pass
 
-fetch_web(url,savedir=dir)
 
-#TODO:use getopt() to process args in main function.
+
+if __name__=="__main__":
+    parser = argparse.ArgumentParser()    
+    parser.add_argument("url",type=str, help="Download site URL.")
+    parser.add_argument("-d","--savedir",help="Directory for save the packages.")
+    args = parser.parse_args()
+    url=args.url
+    if args.savedir:
+        dir=args.savedir
+    else:
+        dir=default_dir
+    print(url,dir)
+    fetch_web(url,savedir=dir)
+
 
